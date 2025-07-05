@@ -27,7 +27,7 @@ class BookingApi {
             .where((activity) => activity.destinationRef == destination.ref)
             .map((activity) => activity.ref)
             .toList();
-    _bookings.add(
+    _bookings.addAll([
       Booking(
         id: _sequentialId++,
         name: '${destination.name}, ${destination.continent}',
@@ -36,7 +36,15 @@ class BookingApi {
         destinationRef: destination.ref,
         activitiesRef: activitiesRef,
       ),
-    );
+      Booking(
+        id: _sequentialId++,
+        name: '${destination.name}, ${destination.continent}',
+        startDate: DateTime(2024, 7, 20),
+        endDate: DateTime(2024, 8, 15),
+        destinationRef: destination.ref,
+        activitiesRef: activitiesRef,
+      ),
+    ]);
   }
 
   // Bookings are kept in memory for demo purposes.
@@ -51,26 +59,19 @@ class BookingApi {
 
     // Get User bookings
     router.get('/', (Request request) {
-      return Response.ok(
-        json.encode(_bookings),
-        headers: {'Content-Type': 'application/json'},
-      );
+      return Response.ok(json.encode(_bookings), headers: {'Content-Type': 'application/json'});
     });
 
     // Get a booking by id
     router.get('/<id>', (Request request, String id) {
       final bookingId = int.parse(id);
-      final booking =
-          _bookings.where((booking) => booking.id == bookingId).firstOrNull;
+      final booking = _bookings.where((booking) => booking.id == bookingId).firstOrNull;
 
       if (booking == null) {
         return Response.notFound('Invalid id');
       }
 
-      return Response.ok(
-        json.encode(booking),
-        headers: {'Content-Type': 'application/json'},
-      );
+      return Response.ok(json.encode(booking), headers: {'Content-Type': 'application/json'});
     });
 
     // Save a new booking
@@ -80,9 +81,7 @@ class BookingApi {
 
       if (booking.id != null) {
         // POST endpoint only allows newly created bookings
-        return Response.badRequest(
-          body: 'Booking already has id, use PUT instead.',
-        );
+        return Response.badRequest(body: 'Booking already has id, use PUT instead.');
       }
 
       // Add ID to new booking
@@ -102,8 +101,7 @@ class BookingApi {
     // Delete booking
     router.delete('/<id>', (Request request, String id) async {
       final bookingId = int.parse(id);
-      final booking =
-          _bookings.where((booking) => booking.id == bookingId).firstOrNull;
+      final booking = _bookings.where((booking) => booking.id == bookingId).firstOrNull;
       if (booking == null) {
         return Response.notFound('Invalid id');
       }
