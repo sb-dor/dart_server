@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'package:compass_server/model/user/user.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -29,17 +30,28 @@ class LoginApi {
       final body = await request.readAsString();
       final loginRequest = LoginRequest.fromJson(json.decode(body));
 
-      if (loginRequest.email == Constants.email &&
-          loginRequest.password == Constants.password) {
+      if (loginRequest.email == Constants.email && loginRequest.password == Constants.password) {
         return Response.ok(
-          json.encode(
-            LoginResponse(token: Constants.token, userId: Constants.userId),
-          ),
+          json.encode(LoginResponse(token: Constants.token, userId: Constants.userId)),
           headers: {'Content-Type': 'application/json'},
         );
       }
 
       return Response.unauthorized('Invalid credentials');
+    });
+
+    router.get('/', (Request request) async {
+      return Response.ok(
+        json.encode(
+          User(
+            id: 1.toString(),
+            name: "Avaz",
+            email: "test@gmail.com",
+            picture: "picture",
+          ).toJson(),
+        ),
+        headers: {'Content-Type': 'application/json'},
+      );
     });
 
     return router;

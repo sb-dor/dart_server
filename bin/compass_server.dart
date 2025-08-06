@@ -20,12 +20,13 @@ final _router =
       ..get('/continent', continentHandler)
       ..mount('/destination', DestinationApi().router.call)
       ..mount('/booking', BookingApi().router.call)
-      ..mount('/user', UserApi().router.call)
+      ..get('/user', UserApi().router.call)
+      ..post('/user', UserApi().router.call)
       ..mount('/login', LoginApi().router.call);
 
 void main(List<String> args) async {
   // Use any available host or container IP (usually `0.0.0.0`).
-  final ip = "192.168.100.52";
+  final ip = "192.168.100.57";
 
   // Configure a pipeline that logs requests.
   final handler = Pipeline()
